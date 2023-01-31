@@ -9,17 +9,20 @@ conn = mariadb.connect(
                         database = dbcreds.database
 )
 cursor = conn.cursor()
-print("Welcome to the command line blog")
-username = str(input("Please enter your username: "))
-password = str(input("Please enter your password: "))
-cursor.execute("CALL check_creds(?, ?)",[username, password])
-result = cursor.fetchall()
-print(result)
-rows = len(result)
-if rows == 0:
-        print("Please enter a valid username and password")
-elif rows != 0: 
-    print("Welcome! Your client id is: ", result)
+def welcome():
+    print("Welcome to the command line blog")
+    while True:
+        username = str(input("Please enter your username: "))
+        password = str(input("Please enter your password: "))
+        cursor.execute("CALL check_creds(?, ?)",[username, password])
+        result = cursor.fetchall()
+        rows = len(result)
+        if rows == 0:
+                print("Please enter a valid username and password")
+        elif rows != 0: 
+            print("Welcome! Your client id is: ", result)
+            prompt()
+            break
 
 def prompt():
     print("Please make a selection:\
@@ -31,30 +34,29 @@ def prompt():
         \n6. Quit")
     while True:
         try:
-            selection = int(input("Your selection: "))
+            selection = int(input("Enter your selection: "))
         except ValueError:
             print("Please enter a number between 1 and 6")
-            continue
-        if selection == '1':
+        if selection == 1:
             new_post()
         
-        elif selection == '2':
+        elif selection == 2:
             all_posts()
 
-        elif selection == '3':
+        elif selection == 3:
             my_posts()
 
-        elif selection == '4':
+        elif selection == 4:
             all_users()
 
-        elif selection == '5':
+        elif selection == 5:
             search_post()
 
-        elif selection == '6':
+        elif selection == 6:
             print("Thanks for visiting! Goodbye!")
             break
         else:
-            print("Invalid input, please try again")
+            print("wth")
 
 def new_post():
     client_id = input("Please enter your client id: ")
@@ -72,8 +74,8 @@ def all_posts():
     print(all)
 
 def my_posts():
-    client_id = cursor.execute("SELECT id FROM client")
-    cursor.execute("CALL my_posts()", [client_id])
+    client_id = cursor.execute("CALL client_id()")
+    cursor.execute("CALL my_posts(?)", [client_id])
     mine = cursor.fetchall()
     print(mine)
 
@@ -92,10 +94,5 @@ def search_post():
     print(result)
     
 
-prompt()
-# print("client.user_id")
-# selection = input("pick number 1")
-# if selection == '1':
-#     cursor.execute("SELECT * FROM client")
-#     result = cursor.fetchall()
-#     print(result)
+welcome()
+
