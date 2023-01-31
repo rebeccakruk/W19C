@@ -55,8 +55,9 @@ def prompt():
         elif selection == 6:
             print("Thanks for visiting! Goodbye!")
             break
+        
         else:
-            print("wth")
+            print("Something went wrong, please try again.")
 
 def new_post():
     client_id = input("Please enter your client id: ")
